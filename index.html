@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Para Aitana</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Satisfy&family=Tangerine&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://dedicapag.com/es/PagFloresMoradas/assets/style2.css">
+
+  <style>
+    :root {
+      --bg-envelope-color: #f8c9d4;
+      --heart-color: #ff88c2; 
+      --envelope-tab: #f9bec9;
+      --envelope-cover: #f9b2c4;
+      --shadow-color: rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+        margin: 0;
+        background-color: #0b0d17;
+        overflow: hidden;
+        -webkit-tap-highlight-color: transparent; /* Quita el cuadro azul al tocar en iPhone */
+    }
+
+    .morita-text {
+        position: fixed;
+        top: 15px;
+        width: 100%;
+        text-align: center;
+        color: #d4a5ff;
+        font-family: 'Tangerine', cursive;
+        font-size: clamp(45px, 12vw, 80px);
+        z-index: 1000;
+        text-shadow: 0 0 15px #9d4edd;
+        pointer-events: none;
+    }
+
+    .letter-container {
+      position: fixed;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2000;
+      display: none; 
+    }
+
+    .envelope-wrapper {
+      position: relative;
+      width: 280px;
+      height: 180px;
+      background-color: var(--bg-envelope-color);
+      box-shadow: 0 0 40px var(--shadow-color);
+      transition: transform 0.3s;
+    }
+
+    .envelope-wrapper::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      z-index: 4;
+      border-top: 100px solid var(--envelope-tab);
+      border-left: 140px solid transparent;
+      border-right: 140px solid transparent;
+      transform-origin: top;
+      transition: all 0.5s ease-in-out;
+    }
+
+    .envelope {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+    }
+
+    .envelope::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-bottom: 90px solid var(--envelope-cover);
+      border-left: 140px solid transparent;
+      border-right: 140px solid transparent;
+      z-index: 5;
+    }
+
+    .envelope::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-top: 90px solid transparent;
+      border-bottom: 90px solid var(--envelope-cover);
+      border-left: 140px solid var(--envelope-cover);
+      border-right: 140px solid var(--envelope-cover);
+      z-index: 4;
+    }
+
+    .letter {
+      position: absolute;
+      bottom: 5px;
+      left: 10px;
+      width: 260px;
+      height: 160px;
+      background: #fff;
+      z-index: 2;
+      transition: all 0.5s ease-in-out;
+      padding: 15px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch; /* Scroll suave en iPhone */
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 5px;
+    }
+
+    .letter .text {
+      text-align: left;
+      font-family: 'Nunito', sans-serif;
+      color: #333;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .envelope-wrapper.flap::before {
+      transform: rotateX(180deg);
+      z-index: 1;
+    }
+
+    .envelope-wrapper.flap .letter {
+      bottom: 40px; 
+      height: 350px; /* Ajustado para iPhone SE/pequeños */
+      z-index: 6;
+    }
+
+    .heart {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 35px;
+      height: 35px;
+      background: var(--heart-color);
+      transform: translate(-50%, -20%) rotate(45deg);
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.3s;
+    }
+    .heart:before, .heart:after {
+      content: "";
+      position: absolute;
+      width: 35px;
+      height: 35px;
+      background: var(--heart-color);
+      border-radius: 50%;
+    }
+    .heart:before { top: -18px; left: 0; }
+    .heart:after { left: -18px; top: 0; }
+    
+    .envelope-wrapper.flap .heart {
+        transform: translate(-50%, 150%) rotate(45deg) scale(0.6);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    #audio-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #000;
+      z-index: 9999;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      color: white; text-align: center;
+      padding: 20px;
+    }
+
+    .overlay-image { width: 80px; animation: heartbeat 1.2s infinite; }
+    @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+    .flowers {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        height: 100vh;
+        z-index: 10;
+    }
+  </style>
+</head>
+
+<body class="not-loaded">
+
+  <div id="audio-overlay">
+      <img src="https://dedicapag.com/es/PagFloresMoradas/assets/cora.svg" class="overlay-image">
+      <h2 style="margin-top:20px; letter-spacing: 2px; font-family: 'Satisfy';">TOCA PARA EMPEZAR</h2>
+      <p style="font-family: 'Nunito'; font-size: 12px; opacity: 0.7;">(Sube el volumen 🔊)</p>
+  </div>
+
+  <h1 class="morita-text">Para Aitana</h1>
+
+  <div class="flowers">
+    <div class="flower-wrapping"></div>
+    <div class="flower flower--1"><div class="flower__leafs"><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__white-circle"></div></div><div class="flower__line"></div></div>
+    <div class="flower flower--2"><div class="flower__leafs"><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__white-circle"></div></div><div class="flower__line"></div></div>
+    <div class="flower flower--3"><div class="flower__leafs"><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__white-circle"></div></div><div class="flower__line"></div></div>
+    <div class="flower flower--4"><div class="flower__leafs"><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__white-circle"></div></div><div class="flower__line"></div></div>
+    <div class="flower flower--5"><div class="flower__leafs"><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__white-circle"></div></div><div class="flower__line"></div></div>
+    <div class="flower flower--6"><div class="flower__leafs"><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__white-circle"></div></div><div class="flower__line"></div></div>
+    <div class="flower flower--7"><div class="flower__leafs"><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__white-circle"></div></div><div class="flower__line"></div></div>
+    <div class="flower flower--8"><div class="flower__leafs"><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__leaf"></div><div class="flower__white-circle"></div></div><div class="flower__line"></div></div>
+  </div>
+
+  <audio id="backgroundMusic" playsinline>
+    <source src="https://dedicapag.com/es/PagFloresMoradas/musicas/The Weeknd-Die For You.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="letter-container" id="letterContainer">
+    <div class="envelope-wrapper" id="envelope">
+      <div class="envelope">
+        <div class="letter">
+          <div class="text">
+            <h3 style="font-family:'Satisfy'; color:#db2f8e; margin:0; text-align:center;">Hola mi amor,</h3>
+            <p>te hice este detallito porque te amo mucho. Quizás no es mucho pero es con mucho amor.</p>
+            <p>Quería recordarte lo mucho que te quiero, lo mucho que disfruto estar con vs y como estas lejos y te extraño quería regalarte unas flores, aunque no sean de verdad JAJAJAJA. Pienso que los detalles no solo tienen que valer plata sino que también tiene que valer su intención.</p>
+            <p>Te amo mucho mi amor y que sepas que me haces muy feliz.</p>
+            <p><strong>Atte. Tu novio Santi</strong></p>
+            
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+            
+            <img src="https://f004.backblazeb2.com/file/Dedicapag-Mora-2025/PagFloresMoradas%2Fuploads%2F69532ba6e9da5_53ff5f3c-7d9b-4818-aab9-c942dafd5593.jpg" style="width:100%; border-radius:10px; margin-bottom: 10px;">
+            
+            <p style="font-style: italic; font-size: 13px;">Veo esta foto y se me vienen a la mente muchas frases (quizás sea muy friki pero este friki te ama):</p>
+            
+            <p>🌿 <strong>The Last of Us</strong><br>Ellie: “No importa el mundo… mientras estemos juntos.”</p>
+            <p>🎮 <strong>Halo</strong><br>Cortana: “Eres todo lo que necesito.”</p>
+            <p>🤠 <strong>Red Dead Redemption 2</strong><br>Arthur: “Si tuviera una vida mejor, la querría contigo.”</p>
+            <p>🛡️ <strong>The Legend of Zelda</strong><br>Zelda: “Siempre estaré a tu lado.”</p>
+          </div>
+        </div>
+      </div>
+      <div class="heart" id="openBtn"></div>
+    </div>
+  </div>
+
+  <script>
+    const overlay = document.getElementById('audio-overlay');
+    const music = document.getElementById('backgroundMusic');
+    const envelope = document.getElementById('envelope');
+    const openBtn = document.getElementById('openBtn');
+    const letterContainer = document.getElementById('letterContainer');
+
+    // Fix para iPhone: El audio debe activarse por una acción del usuario
+    overlay.addEventListener('click', function() {
+      music.play().then(() => {
+        overlay.style.display = 'none';
+        document.body.classList.remove('not-loaded');
+        letterContainer.style.display = 'block'; 
+      }).catch(e => {
+        // Fallback si Safari bloquea el autoplay
+        overlay.style.display = 'none';
+        document.body.classList.remove('not-loaded');
+        letterContainer.style.display = 'block';
+      });
+    }, { once: true });
+
+    openBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      envelope.classList.toggle('flap');
+    });
+  </script>
+</body>
+</html>
